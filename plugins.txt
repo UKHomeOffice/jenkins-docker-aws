@@ -1,0 +1,4 @@
+copyartifact:1.35.1
+slack:1.8
+run-condition:1.0
+rake:1.8.0
