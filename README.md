@@ -1,17 +1,16 @@
 # DOCKER JENKINS
-This folder contains the build for a docker image of jenkins with given plugins. Full documentation is given below about how this jenkins enables backing up and restoring of config from Amazon S3.
+This folder contains the build for a docker image of jenkins with given plugins. Features include:
+- Backing up and restoring of config from Amazon S3
+- Includes docker, git, awscli
+- Includes kubectl and restoration of corresponding config from encrypted file in Amazon S3
+- Includes restoration of encrypted config for docker logins from encrypted file in Amazon S3
 
-If you make updates to the jenkins docker image you will need to push these to docker hub and update the AWS cloud formation template to use the later version (../templates/cimngt.yaml).
-
-To automatically build and push a new version to docker hub from this folder run:
-$ ./build_and_push.sh <username>/<reponame>:<tag>
+To automatically build and push a new version to your chosen docker repository from this folder run:
+$ ./build_and_push.sh <repositoryname>/<username>/<reponame>:<tag>
 e.g.
-./build_and_push.sh timgent/aws-jenkins:v0.5
+./build_and_push.sh quay.io/timgent/aws-jenkins:v0.5
 
-# General jenkins-docker notes
-
-Docker built image is hosted here: https://registry.hub.docker.com/u/state/jenkins/
-
+# Syncing config from S3 bucket
 Jenkins docker image. Jenkins configuration can be synced from AWS S3 bucket at
 startup.
 
@@ -24,11 +23,6 @@ If `JENKINS_HOME_S3_BUCKET_NAME` is set, bucket config will be written out to
 `/srv/jenkins/jenkins_backup.sh`. So you can just simply create a jenkins job
 which runs the backup script.
 
-The image is based on Fedora base image. It has docker, git, aws cli tools and
-obviously Jenkins preinstall.
-
-## Configuration
-
 Configuration is done using environment variables.
 
 Authentication to S3 bucket can be passed in via `AWS_SECRET_ACCESS_KEY` and
@@ -40,12 +34,25 @@ Authentication to S3 bucket can be passed in via `AWS_SECRET_ACCESS_KEY` and
 - `JAVA_OPTS` Default: unset.
 - `JENKINS_OPTS` Default: unset. Any valid jenkins parameter is supported
 
-## Running
+# Secrets
+kubeconfig and docker login config syncing to S3 bucket are supported. You will need to encrypt and upload dockercfg and kubeconfig files to your chosen S3 buckets to enable this. For example to encrypt:
+
+`aws kms encrypt --key-id xxxxxxx --plaintext "$(cat dockercfg)" --query CiphertextBlob --output text | base64 -d > dockercfg.encrypted`
+
+Then upload to s3. The bucket name will need to be set as an environment variable SECRETS_BUCKET when the container is run.
+
+# Enabling docker in docker
+This container containers docker which enables it to execute docker commands using the host machines docker daemon. To enable this the docker socket will need to be mapped in as a volume to the container like:
+-v /var/run/docker.sock:/var/run/docker.sock
+
+# Running
 
 ```bash
 docker run \
   -e AWS_SECRET_ACCESS_KEY=xxx \
   -e AWS_ACCESS_KEY_ID=xxx \
   -e JENKINS_HOME_S3_BUCKET_NAME=example-jenkinsconfig-us-east-1 \
+  -e SECRETS_BUCKET=my_secrets_bucket \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   -p 8080:8080 state/jenkins
 ```
