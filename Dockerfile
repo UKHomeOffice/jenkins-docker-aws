@@ -1,7 +1,7 @@
 FROM fedora:20
 
 RUN yum update -y -q; yum clean all
-RUN yum --enablerepo updates-testing install -y -q python-pip java-headless dejavu-sans-fonts git wget parallel; yum clean all; pip install awscli
+RUN yum --enablerepo updates-testing install -y -q python-pip java-headless dejavu-sans-fonts git wget parallel which; yum clean all; pip install awscli
 
 # Install jenkins
 ENV JENKINS_VERSION 1.620
