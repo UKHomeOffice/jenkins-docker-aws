@@ -56,3 +56,16 @@ docker run \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -p 8080:8080 state/jenkins
 ```
+
+# Useful Paths
+
+You may choose to mount your Amazon secrets in a file that looks like this at 
+`/root/.aws/credentials` 
+
+```
+[default]
+aws_access_key_id = xxx
+aws_secret_access_key = xxx
+```
+
+Rather than via your environment variables.
