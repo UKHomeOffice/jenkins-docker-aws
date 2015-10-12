@@ -1,4 +1,7 @@
 # DOCKER JENKINS
+
+[![Build Status](https://travis-ci.org/UKHomeOffice/jenkins-docker-aws.svg?branch=master)](https://travis-ci.org/UKHomeOffice/jenkins-docker-aws)
+
 This folder contains the build for a docker image of jenkins with given plugins. Features include:
 - Backing up and restoring of config from Amazon S3
 - Includes docker, git, awscli
@@ -38,12 +41,18 @@ Authentication to S3 bucket can be passed in via `AWS_SECRET_ACCESS_KEY` and
 - `JAVA_OPTS` Default: unset.
 - `JENKINS_OPTS` Default: unset. Any valid jenkins parameter is supported
 
-# Secrets
+# Secrets for kubeconfig and dockercfg
+## Option 1 - getting secrets from S3
 kubeconfig and docker login config syncing to S3 bucket are supported. You will need to encrypt and upload dockercfg and kubeconfig files to your chosen S3 buckets to enable this. For example to encrypt:
 
 `aws kms encrypt --key-id xxxxxxx --plaintext "$(cat dockercfg)" --query CiphertextBlob --output text | base64 -d > dockercfg.encrypted`
 
 Then upload to s3. The bucket name will need to be set as an environment variable SECRETS_BUCKET when the container is run.
+## Option 2 - map secrets in using volumes
+Using plain docker you can map secrets in with the -v command when running this container.
+- Kube config needs to be mapped in to /root/.kube/config
+- Docker config needs to be mapped in to /root/.docker/config.json
+If you are running this container using kubernetes then kubernetes secrets can be used to map these in as volumes as usual. Documentation is available [here](https://github.com/kubernetes/kubernetes/tree/master/docs/user-guide/secrets)
 
 # Enabling docker in docker
 This container containers docker which enables it to execute docker commands using the host machines docker daemon. To enable this the docker socket will need to be mapped in as a volume to the container like:
@@ -63,8 +72,8 @@ docker run \
 
 # Useful Paths
 
-You may choose to mount your Amazon secrets in a file that looks like this at 
-`/root/.aws/credentials` 
+You may choose to mount your Amazon secrets in a file that looks like this at
+`/root/.aws/credentials`
 
 ```
 [default]
