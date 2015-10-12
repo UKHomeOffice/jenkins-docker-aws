@@ -1,4 +1,7 @@
 # DOCKER JENKINS
+
+[![Build Status](https://travis-ci.org/UKHomeOffice/jenkins-docker-aws.svg?branch=master)](https://travis-ci.org/UKHomeOffice/jenkins-docker-aws)
+
 This folder contains the build for a docker image of jenkins with given plugins. Features include:
 - Backing up and restoring of config from Amazon S3
 - Includes docker, git, awscli
