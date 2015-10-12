@@ -6,9 +6,13 @@ This folder contains the build for a docker image of jenkins with given plugins.
 - Includes restoration of encrypted config for docker logins from encrypted file in Amazon S3
 
 To automatically build and push a new version to your chosen docker repository from this folder run:
+```bash
 $ ./build_and_push.sh <repositoryname>/<username>/<reponame>:<tag>
+```
 e.g.
+```bash
 ./build_and_push.sh quay.io/timgent/aws-jenkins:v0.5
+```
 
 # Syncing config from S3 bucket
 Jenkins docker image. Jenkins configuration can be synced from AWS S3 bucket at
