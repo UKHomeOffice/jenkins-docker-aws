@@ -44,9 +44,13 @@ set_quay_login() {
 
 # Allow to pass in jenkins options after --
 if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
-  download_secrets
-  set_kubeconfig
-  set_quay_login
+  if [ -n "$SECRETS_BUCKET" ]; then
+    download_secrets
+    set_kubeconfig
+    set_quay_login
+  else
+    echo "No secrets bucket specified, will use mapped volumes if present"
+  fi
   jenkins_home_restore
 
   if [[ $? -eq 0 ]]; then
