@@ -8,13 +8,20 @@ jenkins_home_restore() {
     echo "export JENKINS_HOME_S3_BUCKET_NAME=${JENKINS_HOME_S3_BUCKET_NAME}" > /etc/jenkins-bucket-config
     [[ -n ${AWS_SECRET_ACCESS_KEY} ]] && echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> /etc/jenkins-bucket-config
     [[ -n ${AWS_ACCESS_KEY_ID} ]] && echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> /etc/jenkins-bucket-config
+    # Add config options so the backup script is not jenkins specific
+    echo "export TAR_FILE=jenkins_home" >> /etc/jenkins-bucket-config
+    echo "export FOLDER=jenkins_home" >> /etc/jenkins-bucket-config
 
-    aws s3 cp s3://${JENKINS_HOME_S3_BUCKET_NAME}/jenkins_home/jenkins_home.tar.gz /tmp
+    aws s3 cp s3://${JENKINS_HOME_S3_BUCKET_NAME}/jenkins_home2/jenkins_home.tar.gz /tmp
 
     if [[ -f /tmp/jenkins_home.tar.gz ]]; then
       cd ${JENKINS_HOME}
       tar -xzf /tmp/jenkins_home.tar.gz
       rm -f /tmp/jenkins_home.tar.gz
+      # Did they have a backup of the jenkins war if so lets use that it will be closer to the version they used
+      if [[ -f jenkins.war ]]; then
+        cp jenkins.war /usr/lib/jenkins/jenkins.war
+      fi
     fi
   else
     echo 'Unable to restore existing jenkins configuration. JENKINS_HOME_S3_BUCKET_NAME is unset.'
