@@ -12,7 +12,7 @@ jenkins_home_restore() {
     echo "export TAR_FILE=jenkins_home" >> /etc/jenkins-bucket-config
     echo "export FOLDER=jenkins_home" >> /etc/jenkins-bucket-config
 
-    aws s3 cp s3://${JENKINS_HOME_S3_BUCKET_NAME}/jenkins_home2/jenkins_home.tar.gz /tmp
+    aws s3 cp s3://${JENKINS_HOME_S3_BUCKET_NAME}/jenkins_home/jenkins_home.tar.gz /tmp
 
     if [[ -f /tmp/jenkins_home.tar.gz ]]; then
       cd ${JENKINS_HOME}
