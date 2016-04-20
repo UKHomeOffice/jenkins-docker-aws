@@ -1,18 +1,24 @@
-FROM fedora:20
+FROM quay.io/ukhomeofficedigital/centos-base:v0.2.0
 
-RUN yum update -y -q; yum clean all
-RUN yum --enablerepo updates-testing install -y -q python-pip java-headless dejavu-sans-fonts git wget parallel which; yum clean all; pip install awscli
+RUN rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
+
+RUN yum install -y -q python-pip java-headless dejavu-sans-fonts git wget parallel which; yum clean all; pip install awscli
 
 # Install jenkins
 ENV JENKINS_VERSION 1.620
 RUN yum install -y -q http://pkg.jenkins-ci.org/redhat/jenkins-${JENKINS_VERSION}-1.1.noarch.rpm
 
+ADD docker.repo /etc/yum.repos.d/docker.repo
+
+RUN cat /etc/yum.repos.d/docker.repo
+ENV DOCKER_VERSION 1.11.0
 # Install docker (NB: Must mount in docker socket for it to work)
-RUN curl -O -sSL https://get.docker.com/rpm/1.7.1/centos-7/RPMS/x86_64/docker-engine-1.7.1-1.el7.centos.x86_64.rpm
-RUN yum localinstall -y --nogpgcheck docker-engine-1.7.1-1.el7.centos.x86_64.rpm
+#RUN curl -O -sSL https://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-${DOCKER_VERSION}-1.el7.centos.x86_64.rpm
+#RUN rpm -iUvh docker-engine-${DOCKER_VERSION}-1.el7.centos.x86_64.rpm
+RUN yum update && yum install -y docker-engine-${DOCKER_VERSION}-1.el7.centos
 
 # Install kubectl
-ENV KUBE_VER=1.0.1
+ENV KUBE_VER=1.2.2
 ENV KUBE_URL=https://storage.googleapis.com/kubernetes-release/release/v${KUBE_VER}/bin/linux/amd64/kubectl
 RUN /bin/bash -l -c "wget --quiet ${KUBE_URL} \
                      -O /usr/local/bin/kubectl && \
