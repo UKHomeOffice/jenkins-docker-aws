@@ -10,7 +10,7 @@ RUN yum install -y -q http://pkg.jenkins-ci.org/redhat/jenkins-${JENKINS_VERSION
 
 ADD docker.repo /etc/yum.repos.d/docker.repo
 
-ENV DOCKER_VERSION 1.11.0
+ENV DOCKER_VERSION 1.9.1
 # Install docker (NB: Must mount in docker socket for it to work)
 #RUN curl -O -sSL https://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-${DOCKER_VERSION}-1.el7.centos.x86_64.rpm
 #RUN rpm -iUvh docker-engine-${DOCKER_VERSION}-1.el7.centos.x86_64.rpm
