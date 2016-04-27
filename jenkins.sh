@@ -24,7 +24,7 @@ jenkins_home_restore() {
 download_secrets() {
   echo "Downloading secrets"
   mkdir /root/.secrets
-  /opt/bin/s3secrets --region eu-west-1 --bucket ${SECRETS_BUCKET} --output-dir /root/.secrets
+  /opt/bin/s3secrets s3 get --region eu-west-1 -b ${SECRETS_BUCKET} -d /root/.secrets /docker/*
   echo "Secrets downloaded"
 }
 
@@ -35,11 +35,11 @@ set_kubeconfig() {
   echo "Kubeconfig created successfully"
 }
 
-set_quay_login() {
-  echo "Creating docker login for quay.io"
+set_docker_login() {
+  echo "Creating docker login"
   mkdir /root/.docker
-  cp /root/.secrets/dockercfg /root/.docker/config.json
-  echo "Docker login for quay.io created successfully"
+  cp /root/.secrets/config.json /root/.docker/config.json
+  echo "Docker login created successfully"
 }
 
 # Allow to pass in jenkins options after --
@@ -47,7 +47,7 @@ if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
   if [ -n "$SECRETS_BUCKET" ]; then
     download_secrets
     set_kubeconfig
-    set_quay_login
+    set_docker_login
   else
     echo "No secrets bucket specified, will use mapped volumes if present"
   fi
