@@ -24,22 +24,26 @@ jenkins_home_restore() {
 download_secrets() {
   echo "Downloading secrets"
   mkdir /root/.secrets
-  /opt/bin/s3secrets s3 get --region eu-west-1 -b ${SECRETS_BUCKET} -d /root/.secrets /docker/*
+  /opt/bin/s3secrets --region eu-west-1 s3 get -b ${SECRETS_BUCKET} -d /root/.secrets /docker/*
   echo "Secrets downloaded"
 }
 
 set_kubeconfig() {
-  echo "Creating kubeconfig"
-  mkdir /root/.kube
-  cp /root/.secrets/kubeconfig /root/.kube/config
-  echo "Kubeconfig created successfully"
+  if [[ -f /root/.secrets/kubeconfig ]]; then
+    echo "Creating kubeconfig"
+    mkdir /root/.kube
+    cp /root/.secrets/kubeconfig /root/.kube/config
+    echo "Kubeconfig created successfully"
+  fi
 }
 
 set_docker_login() {
-  echo "Creating docker login"
-  mkdir /root/.docker
-  cp /root/.secrets/config.json /root/.docker/config.json
-  echo "Docker login created successfully"
+  if [[ -f /root/.secrets/config.json ]]; then
+    echo "Creating docker login"
+    mkdir /root/.docker
+    cp /root/.secrets/config.json /root/.docker/config.json
+    echo "Docker login created successfully"
+  fi
 }
 
 # Allow to pass in jenkins options after --

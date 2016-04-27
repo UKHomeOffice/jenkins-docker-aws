@@ -5,7 +5,7 @@ RUN yum install -y wget && wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/
   rpm -ivh epel-release-7-6.noarch.rpm
 
 
-RUN yum install -y -q python-pip java-headless dejavu-sans-fonts git parallel which; yum clean all; pip install awscli
+RUN yum install -y -q python-pip java-headless fontconfig dejavu-sans-fonts git parallel which; yum clean all; pip install awscli
 
 # Install jenkins
 ENV JENKINS_VERSION 1.620
