@@ -24,7 +24,7 @@ jenkins_home_restore() {
 download_secrets() {
   echo "Downloading secrets"
   mkdir /root/.secrets
-  /opt/bin/s3secrets --region eu-west-1 s3 get -b ${SECRETS_BUCKET} -d /root/.secrets /docker/*
+  /opt/bin/s3secrets --region eu-west-1 s3 get -b ${SECRETS_BUCKET} -d /root/.secrets /
   echo "Secrets downloaded"
 }
 
