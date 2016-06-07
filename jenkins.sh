@@ -56,7 +56,7 @@ if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
     echo "No secrets bucket specified, will use mapped volumes if present"
   fi
   jenkins_home_restore
-
+  source /root/.bashrc
   if [[ $? -eq 0 ]]; then
     exec java ${JAVA_OPTS} -jar /usr/lib/jenkins/jenkins.war ${JENKINS_OPTS} "$@"
   fi
