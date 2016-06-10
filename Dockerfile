@@ -23,7 +23,7 @@ RUN curl -s https://raw.githubusercontent.com/getcarina/dvm/${DVM_VERSION}/insta
   source /root/.dvm/dvm.sh && \
   dvm install ${DOCKER_VERSION}
 
-RUN echo source /root/.dvm/dvm.sh >> /root/.bashrc && echo source /root/.dvm/dvm.sh >> /root/.bashrc
+RUN echo source /root/.dvm/dvm.sh >> /root/.bashrc && echo dvm install ${DOCKER_VERSION} >> /root/.bashrc
 #RUN yum update && yum install -y docker-engine-${DOCKER_VERSION}-1.el7.centos
 
 # Install kubectl
