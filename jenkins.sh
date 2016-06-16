@@ -38,6 +38,9 @@ set_kubeconfig() {
 }
 
 set_docker_login() {
+  if [[ -f /root/.secrets/dockercfg ]]; then
+    mv /root/.secrets/dockercfg /root/.secrets/config.json
+  fi
   if [[ -f /root/.secrets/config.json ]]; then
     echo "Creating docker login"
     mkdir /root/.docker
