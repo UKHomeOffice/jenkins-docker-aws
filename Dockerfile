@@ -37,9 +37,7 @@ RUN /usr/bin/mkdir -p /opt/bin
 RUN URL=https://github.com/UKHomeOffice/s3secrets/releases/download/v0.1.3/s3secrets_v0.1.3_linux_x86_64 OUTPUT_FILE=/opt/bin/s3secrets MD5SUM=ec5bc16e6686c365d2ca753d31d62fd5 /usr/bin/bash -c 'until [[ -x ${OUTPUT_FILE} ]] && [[ $(md5sum ${OUTPUT_FILE} | cut -f1 -d" ") == ${MD5SUM} ]]; do wget -q -O ${OUTPUT_FILE} ${URL} && chmod +x ${OUTPUT_FILE}; done'
 
 # Install docker-compose
-RUN /usr/bin/mkdir -p /opt/bin
-RUN URL=https://github.com/docker/compose/releases/download/1.7.1/docker-compose-Linux-x86_64 OUTPUT_FILE=/opt/bin/docker-compose MD5SUM=d7e662ce0f9833ac6c28a07fcb169097 /usr/bin/bash -c 'until [[ -x ${OUTPUT_FILE} ]] && [[ $(md5sum ${OUTPUT_FILE} | cut -f1 -d" ") == ${MD5SUM} ]]; do wget -q -O ${OUTPUT_FILE} ${URL} && chmod +x ${OUTPUT_FILE}; done'
-
+RUN URL=https://github.com/docker/compose/releases/download/1.7.1/docker-compose-Linux-x86_64 OUTPUT_FILE=/usr/local/bin/docker-compose MD5SUM=d7e662ce0f9833ac6c28a07fcb169097 /usr/bin/bash -c 'until [[ -x ${OUTPUT_FILE} ]] && [[ $(md5sum ${OUTPUT_FILE} | cut -f1 -d" ") == ${MD5SUM} ]]; do wget -q -O ${OUTPUT_FILE} ${URL} && chmod +x ${OUTPUT_FILE}; done'
 
 ENV JENKINS_HOME /var/lib/jenkins
 
