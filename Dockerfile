@@ -1,6 +1,5 @@
 FROM quay.io/ukhomeofficedigital/centos-base:v0.2.0
 
-#RUN rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 RUN yum install -y wget && wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-7.noarch.rpm && \
   rpm -ivh epel-release-7-7.noarch.rpm
 
@@ -8,7 +7,7 @@ RUN yum install -y wget && wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/
 RUN yum install -y -q python-pip java-headless fontconfig dejavu-sans-fonts git parallel which; yum clean all; pip install awscli
 
 # Install jenkins
-ENV JENKINS_VERSION 2.14
+ENV JENKINS_VERSION 2.15
 RUN yum install -y -q http://pkg.jenkins-ci.org/redhat/jenkins-${JENKINS_VERSION}-1.1.noarch.rpm
 
 #ADD docker.repo /etc/yum.repos.d/docker.repo
@@ -36,6 +35,11 @@ RUN /bin/bash -l -c "wget --quiet ${KUBE_URL} \
 # Install S3 Secrets
 RUN /usr/bin/mkdir -p /opt/bin
 RUN URL=https://github.com/UKHomeOffice/s3secrets/releases/download/v0.1.3/s3secrets_v0.1.3_linux_x86_64 OUTPUT_FILE=/opt/bin/s3secrets MD5SUM=ec5bc16e6686c365d2ca753d31d62fd5 /usr/bin/bash -c 'until [[ -x ${OUTPUT_FILE} ]] && [[ $(md5sum ${OUTPUT_FILE} | cut -f1 -d" ") == ${MD5SUM} ]]; do wget -q -O ${OUTPUT_FILE} ${URL} && chmod +x ${OUTPUT_FILE}; done'
+
+# Install docker-compose
+RUN /usr/bin/mkdir -p /opt/bin
+RUN URL=https://github.com/docker/compose/releases/download/1.7.1/docker-compose-Linux-x86_64 OUTPUT_FILE=/opt/bin/docker-compose MD5SUM=d7e662ce0f9833ac6c28a07fcb169097 /usr/bin/bash -c 'until [[ -x ${OUTPUT_FILE} ]] && [[ $(md5sum ${OUTPUT_FILE} | cut -f1 -d" ") == ${MD5SUM} ]]; do wget -q -O ${OUTPUT_FILE} ${URL} && chmod +x ${OUTPUT_FILE}; done'
+
 
 ENV JENKINS_HOME /var/lib/jenkins
 
