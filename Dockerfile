@@ -1,22 +1,21 @@
-FROM quay.io/ukhomeofficedigital/centos-base:v0.2.0
+FROM quay.io/ukhomeofficedigital/centos-base:v0.4.0
 
 RUN yum install -y wget && wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm && \
   rpm -ivh epel-release-7-8.noarch.rpm
 
-
 RUN yum install -y -q python-pip java-headless fontconfig dejavu-sans-fonts git parallel which; yum clean all; pip install awscli
 
 # Install jenkins
-ENV JENKINS_VERSION 2.19
+ENV JENKINS_VERSION 2.29
 RUN yum install -y -q http://pkg.jenkins-ci.org/redhat/jenkins-${JENKINS_VERSION}-1.1.noarch.rpm
 
 #ADD docker.repo /etc/yum.repos.d/docker.repo
 
-ENV DOCKER_VERSION 1.10.3
+ENV DOCKER_VERSION 1.12.2
 # Install docker (NB: Must mount in docker socket for it to work)
 #RUN curl -O -sSL https://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-${DOCKER_VERSION}-1.el7.centos.x86_64.rpm
 #RUN rpm -iUvh docker-engine-${DOCKER_VERSION}-1.el7.centos.x86_64.rpm
-ENV DVM_VERSION 0.4.0
+ENV DVM_VERSION 0.6.4
 
 RUN curl -s https://raw.githubusercontent.com/getcarina/dvm/${DVM_VERSION}/install.sh | sh && \
   source /root/.dvm/dvm.sh && \
@@ -26,7 +25,7 @@ RUN echo source /root/.dvm/dvm.sh >> /root/.bashrc && echo dvm install ${DOCKER_
 #RUN yum update && yum install -y docker-engine-${DOCKER_VERSION}-1.el7.centos
 
 # Install kubectl
-ENV KUBE_VER=1.2.2
+ENV KUBE_VER=1.3.8
 ENV KUBE_URL=https://storage.googleapis.com/kubernetes-release/release/v${KUBE_VER}/bin/linux/amd64/kubectl
 RUN /bin/bash -l -c "wget --quiet ${KUBE_URL} \
                      -O /usr/local/bin/kubectl && \
