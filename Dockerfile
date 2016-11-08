@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/centos-base:v0.4.0
+FROM quay.io/ukhomeofficedigital/centos-base:v0.5.0
 
 RUN yum install -y wget && wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm && \
   rpm -ivh epel-release-7-8.noarch.rpm
@@ -25,7 +25,7 @@ RUN echo source /root/.dvm/dvm.sh >> /root/.bashrc && echo dvm install ${DOCKER_
 #RUN yum update && yum install -y docker-engine-${DOCKER_VERSION}-1.el7.centos
 
 # Install kubectl
-ENV KUBE_VER=1.3.8
+ENV KUBE_VER=1.4.3
 ENV KUBE_URL=https://storage.googleapis.com/kubernetes-release/release/v${KUBE_VER}/bin/linux/amd64/kubectl
 RUN /bin/bash -l -c "wget --quiet ${KUBE_URL} \
                      -O /usr/local/bin/kubectl && \
