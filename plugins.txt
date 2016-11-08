@@ -1,5 +1,0 @@
-copyartifact:1.38
-slack:2.0.1
-run-condition:1.0
-rake:1.8.0
-rebuild:1.25
