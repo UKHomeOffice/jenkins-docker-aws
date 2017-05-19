@@ -1,0 +1,38 @@
+pipeline:
+  build_docker_image:
+    image: docker:1.12
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker build -t image .
+
+  latest_image_to_quay:
+    image: docker:1.13
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker login -u="ukhomeofficedigital+jenkins_aws" -p=${DOCKER_PASSWORD} quay.io
+      - docker tag image quay.io/ukhomeofficedigital/jenkins-docker-aws:latest
+      - docker push quay.io/ukhomeofficedigital/jenkins-docker-aws:latest
+    when:
+      event: push
+      branch: master
+
+  tag_image_to_quay:
+    image: docker:1.13
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - docker login -u="ukhomeofficedigital+jenkins_aws" -p=${DOCKER_PASSWORD} quay.io
+      - docker tag image quay.io/ukhomeofficedigital/jenkins-docker-aws:${DRONE_TAG}
+      - docker push quay.io/ukhomeofficedigital/jenkins-docker-aws:${DRONE_TAG}
+    when:
+      event: tag
+
+services:
+  dind:
+    image: docker:1.13-dind
+    privileged: true
+    command:
+      - "-s"
+      - "overlay"
