@@ -93,3 +93,4 @@ checkstyle:3.48
 pmd:3.47
 findbugs:4.70
 permissive-script-security:0.1
+keycloak:2.0.2
