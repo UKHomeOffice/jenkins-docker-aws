@@ -6,7 +6,7 @@ RUN rpm -ivh epel-release-7-9.noarch.rpm
 RUN yum install -y -q python-pip java-1.8.0-openjdk-devel fontconfig dejavu-sans-fonts git parallel which; yum clean all; pip install awscli
 
 # Install jenkins
-ENV JENKINS_VERSION 2.61
+ENV JENKINS_VERSION 2.64
 RUN yum install -y -q http://pkg.jenkins-ci.org/redhat/jenkins-${JENKINS_VERSION}-1.1.noarch.rpm
 
 ENV DOCKER_VERSION 17.04.0-ce
